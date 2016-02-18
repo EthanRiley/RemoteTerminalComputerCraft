@@ -1,0 +1,16 @@
+dofile("ModApi")
+print("wait for terminate")
+print("ready")
+  redirTerm(2)
+  while true do 
+    command = getMsgNoTimeout(1)
+    c, p1,p2 = string.match(command, "(.*)/ /(.*)/ /(.*)")
+    local out=""
+    if  p2 ~= nil then 
+      shell.run(command, p1, p2)
+    elseif p1 ~= nil then
+      shell.run(command, p1)
+    else
+      shell.run(command)
+    end
+  end

@@ -1,0 +1,5 @@
+dofile("ModApi")
+args={...}
+while true do 
+  print(reciveFile(tonumber(args[1])))
+end

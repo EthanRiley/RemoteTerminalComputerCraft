@@ -1,0 +1,7 @@
+dofile("ModApi")
+
+args = {...}
+
+while true do 
+   reciveRun(tonumber(args[1])) 
+end

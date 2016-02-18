@@ -1,0 +1,150 @@
+local modem = peripheral.find("modem") 
+
+if modem == nil then
+  error("please add modem")
+end
+
+function otp(msg, seed)
+  math.randomseed(seed)
+  len = string.len(msg)
+  local a=math.random()
+  for i = 1, len do 
+   a = a..math.random()
+  end
+  ciph = bit32.bxor(msg, len)
+  return ciph
+end
+
+function otpd(cpt, seed)
+  return otp(cpt, seed)
+end
+
+function getMsg(channel, timeout)
+  if not modem.isOpen(channel) then
+    modem.open(channel)
+  end
+  timer = os.startTimer(timeout)
+  local out = false
+  while true do 
+    Event = {os.pullEvent()}
+    if Event[1] == "modem_message" then
+      out=Event[5]
+      break
+    end
+    if Event[1] ==  "timer" then
+      break
+    end
+  end
+  return out
+end 
+
+function sendMsg(data, channel)
+  modem.transmit(channel, channel-1, data)
+end
+
+function sendFile(filename, channel)
+  file = fs.open(filename, "r")
+  filedata = file.readAll()
+  file.close()
+  sendMsg(filename, channel)
+  sendMsg(filedata, channel)
+end
+
+function reciveFile(channel)
+  filename = getMsg(channel, 100)
+  filedata = getMsg(channel, 100)
+  if filename == false then
+    return false
+  elseif filedata == false then
+    return false
+  else  
+    file = fs.open(filename, "w")
+    file.write(filedata)
+    file.close()
+    return filename
+  end
+end
+
+function reciveRun(channel)
+   file = reciveFile(channel)
+   dofile(file)
+   fs.delete(file)
+end
+
+function waitForMsg(channel, timeout)
+  local out = ""
+  while true do 
+    tmpout = getMsg(channel, timeout)
+    if tmpout == false then
+      break
+    else
+      out=out.." "..tmpout
+    end
+  end
+  return out
+end                      
+
+function getMsgNoTimeout(chan)
+  if not modem.isOpen(chan) then
+    modem.open(chan)
+  end
+  Event = {os.pullEvent("modem_message")}
+  return Event[5]
+end
+                                                                                                                       
+local ModTerm = {}
+ModTerm.schan=2
+function ModTerm.write(s)
+ sendMsg(s, ModTerm.schan)
+end
+
+function ModTerm.isColour()
+  return false
+end
+--looking up funcs needed.
+function ModTerm.clear()
+end
+function ModTerm.getSize()
+  return 100,100
+end
+function ModTerm.clearLine()
+end
+function ModTerm.getCursorPos()
+  return 0,0
+end
+function ModTerm.blit(t, c, bc)
+  ModTerm.write(t)
+end
+function ModTerm.setCursorPos(x, y)
+end
+function ModTerm.CursorBlink(e)
+end
+function ModTerm.scroll(n)
+end
+function ModTerm.setTextColour(c)
+end
+function ModTerm.getTextColour()
+  return 9999999
+end
+function ModTerm.setBackgroundColour(c)
+end  
+function ModTerm.getBackground()
+  return 0
+end
+function ModTerm.setTextScale(s)
+end
+function ModTerm.getTextScale()
+  return 1
+end
+function ModTerm.setVisible(yn)
+end
+function ModTerm.restoreCursor()
+  return 0,0
+end
+function ModTerm.reposition(x, y , c)
+end 
+function redirTerm(chan)
+  ModTerm.schan=chan
+  term.redirect(ModTerm)
+end
+--yay 

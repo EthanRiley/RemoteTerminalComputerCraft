@@ -1,0 +1,23 @@
+
+function staircaseDown(count, size) 
+    for i=0, count  do 
+       if turtle.getFuelLevel() < 3*size then
+         turtle.refuel()
+       end
+       for i=0, size do     
+         turtle.digDown()
+         turtle.down()
+         turtle.digDown()
+         turtle.dig()
+         turtle.forward()
+       end 
+       turtle.turnLeft()
+    end
+end
+args = {...}
+if args ~= nil then 
+  staircaseDown(args[1], args[2])
+else 
+  print("args:count, size")
+end
+print("completed")

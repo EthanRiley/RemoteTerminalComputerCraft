@@ -1,0 +1,17 @@
+function staircaseUp(size, count) 
+    for i=0, count  do 
+       if turtle.getFuelLevel() < 3*size then
+         turtle.refuel()
+       end
+       for i=0, size do 
+         turtle.digUp()
+         turtle.up()
+         turtle.digUp()
+         turtle.dig()
+         turtle.forward()
+       end 
+       turtle.turnLeft()
+    end
+end
+staircaseUp(1, 1)
+print("completed")

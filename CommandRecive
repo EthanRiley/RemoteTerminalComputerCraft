@@ -1,0 +1,9 @@
+dofile("ModApi")
+args={...}
+  while true do 
+    command = getMsg(args[1])
+    print(command)
+    s, out = commands.exec(command)
+    print(out)
+    sendMsg(out, args[1])
+  end

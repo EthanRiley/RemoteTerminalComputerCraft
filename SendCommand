@@ -1,0 +1,21 @@
+dofile("ModApi")
+args={...}
+local chan = tonumber(args[1])
+
+ 
+if chan == nil then 
+  print("arg1 = channel")
+else
+  print("entering chan"..args[1])
+  while true do 
+    term.setTextColor(colors.red)
+    input = read()
+    if input == "exitC" then
+      break
+    end
+    sendMsg(input, chan)
+    a=waitForMsg(chan+1, 3)
+    term.setTextColour(colours.yellow)
+    print(a) 
+  end
+end

@@ -1,0 +1,6 @@
+dofile("ModApi")
+
+args={...}
+
+
+sendFile(args[1], tonumber(args[2]))
